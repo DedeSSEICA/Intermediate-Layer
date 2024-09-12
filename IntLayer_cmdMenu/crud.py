@@ -49,7 +49,6 @@ def get_table(table, conn):
     query = f"SELECT * FROM {table} ORDER BY id ASC"
     cursor.execute(query)
     column_names = [desc[0] for desc in cursor.description]
-    #print(len(column_names))
     header = column_names
     rows=[]
     row=cursor.fetchone()
@@ -60,7 +59,7 @@ def get_table(table, conn):
     print(tabulate.tabulate(rows, headers=header, tablefmt='pretty'))
     cursor.close()
 
-    # FUNCTION TO INSERT DATA MANUALLY
+# FUNCTION TO INSERT DATA MANUALLY
 def insert_data(table, conn, email):
     try:
         get_table(table, conn)

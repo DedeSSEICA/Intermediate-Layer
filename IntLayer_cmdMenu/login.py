@@ -33,8 +33,6 @@ def signup(conn2):
         signup(conn2)
     else:
         pwd = maskpass.askpass(prompt="Enter password: ", mask="*")
-        #pwd = input("Enter password: ")
-        #conf_pwd = input("Confirm password: ")
         conf_pwd = maskpass.askpass(prompt="Confirm password: ", mask="*")    
         if conf_pwd == pwd:
             enc = conf_pwd.encode()
@@ -51,7 +49,6 @@ def signup(conn2):
 
 def login(conn2):
     email = input("Enter username: ")
-    #pwd = input("Enter password: ")
     pwd = maskpass.askpass(prompt="Enter password: ", mask="*")
     auth = pwd.encode()
     auth_hash = hashlib.sha256(auth).hexdigest()

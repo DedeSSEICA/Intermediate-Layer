@@ -6,11 +6,8 @@ import crud
 
 # FUNCTION TO ENCRYPT NEW DATA
 def encrypt_new_data(table, conn, email):
-    # Generate a new key pair
-    #(public_key, private_key) = rsa.newkeys(2048)
     crud.get_table(table, conn)
     try:
-        #password=getpass.getpass("New password: ")
         password = maskpass.askpass(prompt="New password:", mask="*")
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM {table} LIMIT 0")
@@ -40,7 +37,6 @@ def encrypt_new_data(table, conn, email):
 def encrypt_data(table, conn, email):
     crud.get_table(table, conn)
     try:
-        #password=getpass.getpass("Password: ")
         password = maskpass.askpass(prompt="New password:", mask="*")
         cursor = conn.cursor()
         cursor.execute(f"SELECT * FROM {table} LIMIT 0")

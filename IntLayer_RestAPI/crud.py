@@ -1,16 +1,11 @@
 import psycopg2
-import logging
 import EDEsim
-from textwrap import wrap
 from typing import List
 from fastapi import HTTPException, APIRouter
 
 router = APIRouter()
 
 def connect_and_log():
-    # Set the logging configuration
-    logging.basicConfig(filename="std.log", format='%(asctime)s %(message)s', filemode='a')
-    logging.info(f"{EDEsim.IPAddr} - Connection info: Database: {EDEsim.database} Username: {EDEsim.username} Host: {EDEsim.host} Port: {str(EDEsim.port)}")
     conn = psycopg2.connect(database=EDEsim.database, user=EDEsim.username, password=EDEsim.password, host=EDEsim.host, port=EDEsim.port)
     return conn
 
@@ -26,32 +21,8 @@ def delete_table(table: str):
         conn.commit()
         cursor.close()
         message = f"Table '{table}' deleted"
-        logging.info(f"{EDEsim.IPAddr} - {message}")
         return message
     except Exception as e:
-        logging.info(f"{EDEsim.IPAddr} - Attempt to delete table '{table}' failed")
-        raise HTTPException(status_code=400, detail=str(e))
-    
-# FUNCTION TO DELETE ROW
-@router.delete("/delete_row/{id}")
-def delete_row(table: str, id: int):
-    try:
-        conn = connect_and_log()
-        cursor = conn.cursor()
-        table=EDEsim.table
-        query = f"DELETE FROM {table} WHERE id = '{id}'"
-        cursor.execute(query)
-        query = f"ALTER TABLE {table} DROP COLUMN id"
-        cursor.execute(query)
-        query = f"ALTER TABLE {table} ADD COLUMN id SERIAL PRIMARY KEY"
-        cursor.execute(query)
-        conn.commit()
-        cursor.close()
-        message = f"Row with id {id} deleted"
-        logging.info(f"{EDEsim.IPAddr} - {message}")
-        return message
-    except Exception as e:
-        logging.info(f"{EDEsim.IPAddr} - Attempt to delete row failed")
         raise HTTPException(status_code=400, detail=str(e))
 
 # FUNCTION TO CREATE TABLE
@@ -75,11 +46,9 @@ def create_table(table: str, columns: List[str]):
         cursor.execute(f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS id SERIAL PRIMARY KEY")
         conn.commit()
         message = f"Table '{table}' created"
-        logging.info(f"{EDEsim.IPAddr} - {message}")
         cursor.close()
         return message
     except Exception as e:
-        logging.info(f"{EDEsim.IPAddr} - Attempt to create table '{table}' failed")
         raise HTTPException(status_code=400, detail=str(e))
 
 # FUNCTION TO INSERT DATA MANUALLY
@@ -97,10 +66,8 @@ def insert_data(data: List[str]):
         conn.commit()
         cursor.close()
         message = f"Data inserted into table '{table}'"
-        logging.info(f"{EDEsim.IPAddr} - {message}")
         return message
     except Exception as e:
-        logging.info(f"{EDEsim.IPAddr} - Attempt to insert data into table '{table}' failed")
         raise HTTPException(status_code=400, detail=str(e))
 
 # FUNCTION TO UPDATE DATA
@@ -118,8 +85,6 @@ def update_data(column:str, new_data: str, id: int):
         conn.commit()
         cursor.close()
         message = f"Table '{table}' updated"
-        logging.info(f"{EDEsim.IPAddr} - {message}")
         return message, ' | '.join(map(str, data))
     except Exception as e:
-        logging.info(f"{EDEsim.IPAddr} - Attempt to update table '{table}' failed")
         raise HTTPException(status_code=400, detail=str(e))

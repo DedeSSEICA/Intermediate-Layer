@@ -5,14 +5,11 @@ import maskpass
 import crud
     
 def decrypt_row(table, conn, email):
-    # Generate a new key pair
-    #(public_key, private_key) = rsa.newkeys(2048)
     crud.get_table(table, conn)
     try:
         cursor = conn.cursor()
           
         id=input("Type the id: ")
-        #password=getpass.getpass("Password: ")
         password = maskpass.askpass(prompt="Password:", mask="*")
 
         cursor.execute(f"SELECT * FROM {table} WHERE id = {id}")
@@ -46,7 +43,6 @@ def decrypt_data(table, conn, email):
         cursor.execute(f"SELECT * FROM {table} LIMIT 0")
         id=input("Type the id: ")
         attr = input("Type the column: ")
-        #password=getpass.getpass("Password: ")
         password = maskpass.askpass(prompt="Password:", mask="*")
         cursor.execute(f"SELECT {attr} FROM {table} WHERE id = '{id}'")
         data = cursor.fetchone()

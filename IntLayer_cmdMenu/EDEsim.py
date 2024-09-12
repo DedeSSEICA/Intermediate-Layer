@@ -1,9 +1,7 @@
 import psycopg2
 import logging
 import os
-import maskpass
 import argparse
-import hashlib
 import socket
 import encryption
 import decryption
@@ -185,8 +183,6 @@ def menu3(conn, email):
 
 # Main function
 def main():
-    #delete_table("simulation", conn)
-    #create_table(conn)
     input("Press Enter to continue...")
     os.system('cls')
     menu0()
